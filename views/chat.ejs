@@ -14,7 +14,8 @@
 		$('#myFieldset').hide();
 		$('#myArea').attr('readonly', true);
 		
-		var cSock = io.connect('http://ldj-pc:5000'); //1. 서버 소켓과 연결(socket객체를 얻음)
+		//var cSock = io.connect('http://ldj-pc:5000'); //1. 서버 소켓과 연결(socket객체를 얻음)
+		var cSock = io.connect('https://node-chatting5311.herokuapp.com'); //1. 서버 소켓과 연결(socket객체를 얻음)
 		
 		cSock.on('rmessage', function(obj){
 			var a=$('#myArea').text();
