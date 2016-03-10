@@ -1,0 +1,115 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Insert title here</title>
+<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script> <!-- 1. socket.io.js 추가 --> 
+
+<script>
+	$(init);
+	function init(){
+		$('#myFieldset').hide();
+		$('#myArea').attr('readonly', true);
+		
+		var cSock = io.connect('http://ldj-pc:5000'); //1. 서버 소켓과 연결(socket객체를 얻음)
+		
+		cSock.on('rmessage', function(obj){
+			var a=$('#myArea').text();
+			a += obj.nickname;  
+			a += ' > ';
+			a += obj.data;
+			a += '\n';
+			$('#myArea').text(a);
+			$('#myArea').prop('scrollTop', $('#myArea').prop('scrollHeight')); //textarea 스크롤이 제일 밑에
+		});
+		
+		cSock.on('welcome', function(data){
+			for(var i in data){
+				$('#myDiv').append('<input type="radio" name="room" value="'+data[i]+'">');
+				$('#myDiv').append(data[i]+'<br>');
+			}
+			
+		});
+		
+		$('#sendbtn').on('click',function(){
+			var sendData =  {nickname:$('#nickname').val() , data:$('#txtChat').val()};
+			cSock.emit('rmessage', sendData);
+		});
+		
+		$('#filebtn').on('click',function(){
+			var fn =$("input[type=file]")[0].files[0]; // input 폼을 이용해서 지정된 파일 확인
+			var AllSize = fn.size; // 진행 사항을 체크하기 위한 파일 전체 사이즈
+			var UploadedSize = 0; // 현재 업로드된 용량
+			
+			var stream = ss.createStream(); //socket.io-stream으로 stream연결
+			
+			ss(cSock).emit('file', stream, {name: fn.name, size: fn.size});
+			
+			var blobstream = ss.createBlobReadStream(fn);
+			blobstream.on('data',function(chunk){ //데이터 전송을 시작하면 얼만큼 진행됐는지 log남김
+				UploadedSize += chunk.length;
+			      console.log(' updated >> ' + UploadedSize + '/' + AllSize );
+			});
+			blobstream.pipe( stream );
+
+		});
+		
+		
+		$('#makeRoom').on('click',function(){ 
+			var room = prompt('방이름 입력 :');
+			cSock.emit('createRoom', room);
+			location.reload();
+		});
+		
+		$('#removeRoom').on('click',function(){ 
+			room = $('input[name=room]:checked').val();
+			cSock.emit('removeRoom', room);
+			location.reload();
+		});
+		
+		$('#chRoom').on('click',function(){ 
+			room = $('input[name=room]:checked').val();
+			if(typeof room === 'undefined'){
+				alert('방을 선택해주세요');
+				return false;
+			}
+			$('#myFieldset').show();
+			cSock.emit('join', room);
+		});
+		
+		$('#txtChat').keypress(function(e){
+			if(e.keyCode === 13){
+				$('#sendbtn').click();
+				$('#txtChat').val('');		
+			}
+		});
+	}
+	
+</script>
+</head>
+<body>
+	<fieldset style = "width: 500px;">
+		<legend>방 목록</legend>
+		<div id="myDiv">
+		</div>
+		<button id="chRoom">입장</button>
+		<button id="makeRoom">방 새로만들기</button>
+		<button id="removeRoom">방 지우기</button>
+	</fieldset>
+	<fieldset id="myFieldset"  style = "width: 600px;">
+		<legend>채팅창</legend>
+		<div id="myChat">
+			<textarea id="myArea" cols="70" rows="30"></textarea>
+		</div>
+		<input id="nickname" type="text" style="width:100px;" value="닉네임">
+		<input id="txtChat" type="text" style="width:300px;"> 
+		<button id="sendbtn">확인</button><br>
+		<input type="file">
+		<button id="filebtn">첨부</button><br>
+	</fieldset>
+	
+</body>
+</html>
