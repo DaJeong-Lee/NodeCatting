@@ -100,16 +100,21 @@
 		<button id="makeRoom">방 새로만들기</button>
 		<button id="removeRoom">방 지우기</button>
 	</fieldset>
-	<fieldset id="myFieldset"  style = "width: 600px;">
+	<fieldset id="myFieldset"  style = "width: 500px;">
 		<legend>채팅창</legend>
 		<div id="myChat">
-			<textarea id="myArea" cols="70" rows="30"></textarea>
+			<textarea id="myArea" cols="60" rows="15"></textarea>
 		</div>
-		<input id="nickname" type="text" style="width:100px;" value="닉네임">
-		<input id="txtChat" type="text" style="width:300px;"> 
-		<button id="sendbtn">확인</button><br>
-		<input type="file">
-		<button id="filebtn">첨부</button><br>
+		<br>
+		<div style="line-height:30px;">
+			<input id="nickname" type="text" style="width:100px;vertical-align:middle;" value="닉네임">
+			<input id="txtChat" type="text" style="width:300px;vertical-align:middle;"> 
+			<button id="sendbtn">확인</button><br>
+		</div>
+		<div style="line-height:30px;">
+			<input type="file"  style="width:300px;vertical-align:middle;">
+			<button id="filebtn" style="width:50px;vertical-align:middle;">첨부</button>
+		</div>
 	</fieldset>
 	
 </body>
