@@ -41,6 +41,7 @@
 		});
 		
 		$('#filebtn').on('click',function(){
+			alert('첨부');
 			var fn =$("input[type=file]")[0].files[0]; // input 폼을 이용해서 지정된 파일 확인
 			var AllSize = fn.size; // 진행 사항을 체크하기 위한 파일 전체 사이즈
 			var UploadedSize = 0; // 현재 업로드된 용량
@@ -57,7 +58,6 @@
 			blobstream.pipe( stream );
 
 		});
-		
 		
 		$('#makeRoom').on('click',function(){ 
 			var room = prompt('방이름 입력 :');
@@ -110,10 +110,6 @@
 			<input id="nickname" type="text" style="width:100px;vertical-align:middle;" value="닉네임">
 			<input id="txtChat" type="text" style="width:300px;vertical-align:middle;"> 
 			<button id="sendbtn">확인</button><br>
-		</div>
-		<div style="line-height:30px;">
-			<input type="file"  style="width:300px;vertical-align:middle;">
-			<button id="filebtn" style="width:50px;vertical-align:middle;">첨부</button>
 		</div>
 	</fieldset>
 	

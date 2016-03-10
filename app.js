@@ -91,8 +91,6 @@ io.sockets.on('connection', function(socket){
 	
 	socket.on('join', joinFn); //join 이벤트 발생시 
 
-
-
 	function removeArr(arr, value) {
 		  var i, len;
 		  if (arr.indexOf) { // IE9+,  다른 모든 브라우져
